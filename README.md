@@ -19,50 +19,58 @@ Before starting any new task, make sure you have the latest version of the proje
 ```bash
 git checkout main
 git pull origin main
-Step 2: Create Your Personal Working Branch
-From the main branch, create a new branch for the feature or bug you are working on. Name your branch after yourself or the feature you are building (e.g., john-doe or feature/login-page).
+````
 
-Bash
+### Step 2: Create Your Personal Working Branch
 
+From the `main` branch, create a new branch for the feature or bug you are working on. Name your branch after yourself or the feature you are building (e.g., `john-doe` or `feature/login-page`).
+
+```bash
 # Replace <your-branch-name> with your chosen name
 git checkout -b <your-branch-name>
+```
+
 You are now on your own branch and can code safely without affecting anyone else's work.
 
-Step 3: Code and Commit Your Changes
+### Step 3: Code and Commit Your Changes
+
 After you have completed a part of your task, save your progress by committing your changes.
 
-Bash
-
+```bash
 # 1. Add all the files you have modified
 git add .
 
 # 2. Commit your changes with a clear, descriptive message
 git commit -m "Feat: Implement the user login interface"
-Step 4: Push Your Branch to GitHub
+```
+
+### Step 4: Push Your Branch to GitHub
+
 When you are ready to share your work, push your branch to the remote repository on GitHub.
 
-Bash
-
+```bash
 # Replace <your-branch-name> with the actual name of your branch
 git push -u origin <your-branch-name>
-(Note: The -u flag is only needed the first time you push a new branch. For subsequent pushes on the same branch, you can just use git push.)
+```
 
-Step 5: Create a Pull Request (PR)
-Go to the project's repository page on GitHub.
+*(Note: The `-u` flag is only needed the first time you push a new branch. For subsequent pushes on the same branch, you can just use `git push`.)*
 
-You will see a yellow notification bar with a button to "Compare & pull request". Click it.
+### Step 5: Create a Pull Request (PR)
 
-Give your Pull Request a clear title and a brief description of the changes you made.
+  - Go to the project's repository page on GitHub.
+  - You will see a yellow notification bar with a button to **"Compare & pull request"**. Click it.
+  - Give your Pull Request a clear title and a brief description of the changes you made.
+  - Finally, click **"Create pull request"**.
 
-Finally, click "Create pull request".
+Your team lead will then review your code and merge it into the `main` branch once it's approved.
 
-Your team lead will then review your code and merge it into the main branch once it's approved.
+-----
 
-TL;DR - Command Summary
-Here is the entire workflow summarized in commands. Copy and run them in order.
+## TL;DR - Command Summary
 
-Bash
+Here is the entire workflow summarized in commands.
 
+```bash
 # 1. Go to the main branch and get the latest updates
 git checkout main
 git pull origin main
@@ -80,3 +88,9 @@ git commit -m "A short description of what you did"
 git push -u origin <your-branch-name>
 
 # 5. Go to the GitHub website to open a Pull Request.
+```
+
+Happy coding\!
+
+```
+```
