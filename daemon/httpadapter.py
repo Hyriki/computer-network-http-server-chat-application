@@ -109,10 +109,57 @@ class HttpAdapter:
         # Handle request hook
         if req.hook:
             print("[HttpAdapter] hook in route-path METHOD {} PATH {}".format(req.hook._route_path,req.hook._route_methods))
-            req.hook(headers = "bksysnet",body = "get in touch")
+            # req.hook(headers = "bksysnet",body = "get in touch")
             #
             # TODO: handle for App hook here
             #
+            try:
+                response_data = req.hook(headers=req.headers, body=req.body)
+                
+                import json
+                body_bytes = json.dumps(response_data).encode('utf-8')
+                
+                if req.path == '/login':
+                    if response_data.get('login_success') == True:
+                        
+                        status_line = "HTTP/1.1 200 OK\r\n"
+                        headers_str = "Content-Type: application/json\r\n"
+                        headers_str += "Set-Cookie: auth=true\r\n" 
+                    else:
+                        
+                        status_line = "HTTP/1.1 401 Unauthorized\r\n"  
+                        headers_str = "Content-Type: application/json\r\n"
+                
+                
+                else:
+                    status_line = "HTTP/1.1 200 OK\r\n"
+                    headers_str = "Content-Type: application/json\r\n"
+
+                
+                headers_str += f"Content-Length: {len(body_bytes)}\r\n"
+                headers_str += "Connection: close\r\n\r\n"
+                response_bytes = status_line.encode('utf-8') + headers_str.encode('utf-8') + body_bytes
+
+            except Exception as e:
+                
+                print(f"[HttpAdapter] Error processing hook: {e}")
+                status_line = "HTTP/1.1 500 Internal Server Error\r\n"
+                headers_str = "Content-Type: text/plain\r\nContent-Length: 21\r\n\r\n"
+                body_str = "Internal Server Error"
+                response_bytes = (status_line + headers_str + body_str).encode('utf-8')
+
+        # else:
+        #     if req.path == '/' or req.path == '/index.html':
+        #         cookie_header = req.headers.get('cookie', '')
+        #         if 'auth=true' in cookie_header:
+                
+        #             response_bytes = resp.build_response(req) 
+        #         else:
+                    
+        #             status_line = "HTTP/1.1 401 Unauthorized\r\n" # 
+        #             headers_str = "Content-Type: text/plain\r\nContent-Length: 12\r\n\r\n"
+        #             body_str = "Unauthorized"
+        #             response_bytes = (status_line + headers_str + body_str).encode('utf-8')
 
         # Build response
         response = resp.build_response(req)
