@@ -119,6 +119,9 @@ class Request():
         # Prepare the request line from the request header
         self.method, self.path, self.version = self.extract_request_line(request)
         
+        # Store original path with query string for backward compatibility
+        original_path = self.path
+        
         # Parse query parameters if present
         if self.path and '?' in self.path:
             self.path, query_string = self.path.split('?', 1)
@@ -142,6 +145,9 @@ class Request():
             #
 
         self.headers = self.prepare_headers(request)
+        # Add path with query string for backward compatibility
+        self.headers['path'] = original_path
+        
         cookies = self.headers.get('cookie', '')
             #
             #  TODO: implement the cookie function here
