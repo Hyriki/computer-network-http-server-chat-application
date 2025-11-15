@@ -266,19 +266,47 @@ def connect_peer(headers, body):
 
 @app.route('/broadcast-peer', methods=['POST'])
 def broadcast_peer(headers, body):
-    """Broadcast message to all peers"""
+    """Broadcast message to all peers via direct TCP"""
     try:
         if isinstance(body, bytes):
             body = body.decode('utf-8')
         data = json.loads(body)
         message = data.get('message', '')
+        sender = data.get('sender', 'unknown')
         
         with lock:
             peer_list = list(PEERS.values())
         
-        # This is a simplified version - actual broadcasting would need
-        # to send to each peer's socket
-        return {"status": "broadcast", "peers": len(peer_list)}
+        # Broadcast to all peers via direct TCP connection
+        success_count = 0
+        failed_peers = []
+        
+        for peer in peer_list:
+            try:
+                # Create JSON payload for P2P message
+                payload = json.dumps({
+                    "type": "message",
+                    "from": sender,
+                    "message": message
+                }) + "\n"
+                
+                # Attempt direct TCP connection to peer
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(2)
+                sock.connect((peer['ip'], peer['port']))
+                sock.sendall(payload.encode())
+                sock.close()
+                success_count += 1
+            except Exception as e:
+                print(f"[Broadcast] Failed to reach peer {peer['id']}: {e}")
+                failed_peers.append(peer['id'])
+        
+        return {
+            "status": "broadcast",
+            "total_peers": len(peer_list),
+            "successful": success_count,
+            "failed": len(failed_peers)
+        }
     except Exception as e:
         return {"error": str(e)}
 
