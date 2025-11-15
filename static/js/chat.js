@@ -109,6 +109,10 @@
         lastMessageCount = 0;
         $('messagesHeader').textContent = '#' + channel;
         
+        // Clear messages immediately when switching channels
+        const container = $('messagesContainer');
+        container.innerHTML = '<div style="text-align:center;color:#95a5a6;padding:20px;">Loading...</div>';
+        
         // Update active state
         const items = document.querySelectorAll('.channel-item');
         items.forEach(function(item) {
@@ -130,11 +134,10 @@
         .then(data => {
             const messages = data.messages || [];
             
-            // Only update if message count changed
-            if (messages.length !== lastMessageCount) {
-                lastMessageCount = messages.length;
-                renderMessages(messages);
-            }
+            // Always render messages to ensure correct channel content is shown
+            // (fixes issue where switching channels might show cached messages)
+            lastMessageCount = messages.length;
+            renderMessages(messages);
         })
         .catch(error => {
             console.error('Error loading messages:', error);
