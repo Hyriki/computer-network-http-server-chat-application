@@ -35,7 +35,7 @@ from urllib.parse import parse_qs
 
 from daemon.weaprous import WeApRous
 
-PORT = 9000  # Default port
+PORT = 8000  # Default port
 PEER_TTL = 300.0  # Peer time-to-live in seconds
 
 # Global data structures
@@ -255,7 +255,7 @@ def connect_peer(headers, body):
         # Test TCP connection
         try:
             test_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            test_sock.settimeout(2)
+            test_sock.settimeout(10)
             test_sock.connect((peer['ip'], peer['port']))
             test_sock.close()
             return {"status": "reachable", "peer": peer}
@@ -292,7 +292,7 @@ def broadcast_peer(headers, body):
                 
                 # Attempt direct TCP connection to peer
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(2)
+                sock.settimeout(300)
                 sock.connect((peer['ip'], peer['port']))
                 sock.sendall(payload.encode())
                 sock.close()

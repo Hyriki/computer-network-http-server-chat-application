@@ -145,7 +145,7 @@ class Peer:
         
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(5)
+            sock.settimeout(300)
             sock.connect((peer_info['ip'], peer_info['port']))
             
             # Send handshake
@@ -295,7 +295,7 @@ class Peer:
         """Handle incoming peer connection"""
         try:
             # Wait for handshake
-            conn.settimeout(10)
+            conn.settimeout(300)
             data = conn.recv(4096).decode()
             
             if "\n" in data:
@@ -426,7 +426,7 @@ if __name__ == "__main__":
     parser.add_argument('--id', default=f'peer_{int(time.time())}', help='Peer ID')
     parser.add_argument('--port', type=int, default=5000, help='Listen port')
     parser.add_argument('--tracker-host', default='127.0.0.1', help='Tracker host')
-    parser.add_argument('--tracker-port', type=int, default=9000, help='Tracker port')
+    parser.add_argument('--tracker-port', type=int, default=8000, help='Tracker port')
     parser.add_argument('--username', default='Anonymous', help='Username')
     
     args = parser.parse_args()
